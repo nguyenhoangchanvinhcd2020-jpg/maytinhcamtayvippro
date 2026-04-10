@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Tính VIP Pro</title>
+    <style>
+        /* --- CSS MÁY TÍNH --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e9ecef;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #212529;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            width: 320px;
+        }
+
+        .display {
+            background-color: #343a40;
+            color: #fff;
+            font-size: 2.5rem;
+            text-align: right;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            min-height: 45px;
+            overflow: hidden;
+        }
+
+        .display.locked {
+            color: #dc3545;
+            font-size: 1.8rem;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            padding: 20px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #495057;
+            color: white;
+            font-weight: 500;
+            transition: all 0.1s ease-in-out;
+        }
+
+        button:active { transform: scale(0.95); }
+        .number:hover { background-color: #6c757d; }
+        
+        .operator { background-color: #ff9f0a; font-weight: bold; }
+        .operator:hover { background-color: #e08b00; }
+        
+        .action { background-color: #adb5bd; color: #212529; font-weight: bold; }
+        .action:hover { background-color: #ced4da; }
+        
+        .zero { grid-column: span 2; text-align: left; padding-left: 30px; }
+        .equal { background-color: #ff9f0a; color: white; }
+
+        /* --- CSS POPUP VIP --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h3 { color: #d63384; margin-top: 0; font-size: 1.5rem; }
+        
+        /* Khung số tài khoản */
+        .payment-box {
+            background-color: #f8f9fa;
+            border: 2px dashed #ced4da;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .payment-box p { margin: 0 0 5px 0; font-size: 14px; color: #6c757d; }
+        .payment-box h2 { margin: 0; color: #198754; font-size: 28px; letter-spacing: 2px; }
+
+        .vip-btn {
+            background: linear-gradient(45deg, #198754, #20c997);
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .vip-btn:hover { background: linear-gradient(45deg, #157347, #1ba87e); }
+        
+        .close-btn {
+            background-color: transparent;
+            color: #6c757d;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .close-btn:hover { color: #343a40; }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        
+        <div class="buttons">
+            <button class="action" onclick="clearDisplay()">AC</button>
+            <button class="action" onclick="deleteLast()">DEL</button>
+            <button class="action" onclick="appendCharacter('%')">%</button>
+            <button class="operator" onclick="appendCharacter('/')">÷</button>
+
+            <button class="number" onclick="appendCharacter('7')">7</button>
+            <button class="number" onclick="appendCharacter('8')">8</button>
+            <button class="number" onclick="appendCharacter('9')">9</button>
+            <button class="operator" onclick="appendCharacter('*')">×</button>
+
+            <button class="number" onclick="appendCharacter('4')">4</button>
+            <button class="number" onclick="appendCharacter('5')">5</button>
+            <button class="number" onclick="appendCharacter('6')">6</button>
+            <button class="operator" onclick="appendCharacter('-')">−</button>
+
+            <button class="number" onclick="appendCharacter('1')">1</button>
+            <button class="number" onclick="appendCharacter('2')">2</button>
+            <button class="number" onclick="appendCharacter('3')">3</button>
+            <button class="operator" onclick="appendCharacter('+')">+</button>
+
+            <button class="number zero" onclick="appendCharacter('0')">0</button>
+            <button class="number" onclick="appendCharacter('.')">.</button>
+            <button class="equal" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <div id="vipModal" class="modal">
+        <div class="modal-content">
+            <h3>👑 Yêu Cầu Gói VIP</h3>
+            <p>Kết quả vượt quá giới hạn <strong>20</strong>!</p>
+            <p>Vui lòng nâng cấp VIP (49k) để xem kết quả này và tính toán không giới hạn.</p>
+            
+            <div class="payment-box">
+                <p>Chuyển khoản MoMo / ZaloPay:</p>
+                <h2>0797866420</h2>
+            </div>
+
+            <button class="vip-btn" onclick="confirmPayment()">✅ Tôi đã chuyển khoản</button>
+            <button class="close-btn" onclick="closeModal()">Tôi không có tiền, để sau</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let currentInput = '0';
+        let isLocked = false; 
+
+        function updateDisplay() {
+            if (isLocked) return; 
+            display.classList.remove('locked');
+            let textToDisplay = currentInput.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\-/g, '−');
+            display.innerText = textToDisplay;
+        }
+
+        function appendCharacter(char) {
+            if (isLocked) {
+                isLocked = false;
+                currentInput = '0';
+            }
+
+            if (currentInput === '0' && !['.', '%', '/', '*', '+', '-'].includes(char)) {
+                currentInput = char;
+            } else {
+                currentInput += char;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            isLocked = false;
+            currentInput = '0';
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (isLocked) return;
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            if (isLocked) return;
+
+            try {
+                let expression = currentInput.replace(/%/g, '/100');
+                let result = new Function('return ' + expression)();
+                
+                if (!Number.isInteger(result)) {
+                    result = parseFloat(result.toFixed(10));
+                }
+                
+                // HIỆN POPUP NẾU KQ > 20
+                if (result > 20) {
+                    document.getElementById('vipModal').style.display = 'flex';
+                    isLocked = true;
+                    display.classList.add('locked');
+                    display.innerText = "Yêu cầu VIP 🔒";
+                    currentInput = "0"; 
+                } else {
+                    currentInput = result.toString();
+                    updateDisplay();
+                }
+
+            } catch (error) {
+                currentInput = 'Lỗi cú pháp';
+                updateDisplay();
+                setTimeout(clearDisplay, 1500);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('vipModal').style.display = 'none';
+            clearDisplay(); 
+        }
+
+        function confirmPayment() {
+            alert('Hệ thống đang kiểm tra giao dịch từ số 0797866420...\nVui lòng giữ máy trong vòng 24h để Admin xác nhận! 😂');
+            closeModal();
+        }
+    </script>
+
+</body>
+</html>
