@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máy Tính VIP Pro</title>
+    <title>Máy Tính VIP Pro Max - Chuẩn Casio</title>
     <style>
         /* --- CSS MÁY TÍNH --- */
         body {
@@ -19,59 +19,81 @@
         .calculator {
             background-color: #212529;
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             padding: 20px;
-            width: 320px;
+            width: 380px; /* Mở rộng chiều ngang để chứa 5 cột */
+        }
+
+        .brand {
+            color: #adb5bd;
+            font-size: 12px;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         .display {
-            background-color: #343a40;
-            color: #fff;
-            font-size: 2.5rem;
+            background-color: #a3b18a; /* Màu màn hình Casio cổ điển */
+            color: #111;
+            font-size: 2.2rem;
             text-align: right;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
             word-wrap: break-word;
             min-height: 45px;
             overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .display.locked {
             color: #dc3545;
-            font-size: 1.8rem;
+            background-color: #f8d7da;
+            font-size: 1.5rem;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         .buttons {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
         }
 
         button {
             border: none;
             outline: none;
-            padding: 20px;
-            font-size: 1.5rem;
-            border-radius: 10px;
+            padding: 15px 10px;
+            font-size: 1.2rem;
+            border-radius: 8px;
             cursor: pointer;
             background-color: #495057;
             color: white;
             font-weight: 500;
             transition: all 0.1s ease-in-out;
+            box-shadow: 0 4px #343a40;
         }
 
-        button:active { transform: scale(0.95); }
-        .number:hover { background-color: #6c757d; }
+        button:active { 
+            transform: translateY(4px);
+            box-shadow: 0 0 #343a40;
+        }
+
+        .number { background-color: #f8f9fa; color: #212529; }
+        .number:hover { background-color: #e2e6ea; }
         
-        .operator { background-color: #ff9f0a; font-weight: bold; }
+        .operator { background-color: #ff9f0a; font-weight: bold; color: white; }
         .operator:hover { background-color: #e08b00; }
         
-        .action { background-color: #adb5bd; color: #212529; font-weight: bold; }
-        .action:hover { background-color: #ced4da; }
+        .action { background-color: #dc3545; color: white; font-weight: bold; }
+        .action:hover { background-color: #c82333; }
+
+        .sci { background-color: #343a40; color: #f8f9fa; font-size: 1rem;}
+        .sci:hover { background-color: #212529; }
         
-        .zero { grid-column: span 2; text-align: left; padding-left: 30px; }
-        .equal { background-color: #ff9f0a; color: white; }
+        .equal { background-color: #198754; color: white; }
+        .equal:hover { background-color: #157347; }
 
         /* --- CSS POPUP VIP --- */
         .modal {
@@ -102,7 +124,6 @@
 
         .modal-content h3 { color: #d63384; margin-top: 0; font-size: 1.5rem; }
         
-        /* Khung số tài khoản */
         .payment-box {
             background-color: #f8f9fa;
             border: 2px dashed #ced4da;
@@ -125,9 +146,10 @@
             border-radius: 8px;
             margin-top: 10px;
             width: 100%;
+            box-shadow: none;
         }
 
-        .vip-btn:hover { background: linear-gradient(45deg, #157347, #1ba87e); }
+        .vip-btn:active { transform: scale(0.98); }
         
         .close-btn {
             background-color: transparent;
@@ -138,47 +160,62 @@
             text-decoration: underline;
             font-size: 14px;
             padding: 5px;
+            box-shadow: none;
         }
-        .close-btn:hover { color: #343a40; }
     </style>
 </head>
 <body>
 
     <div class="calculator">
+        <div class="brand">CASIO Fx-VIP Pro</div>
         <div class="display" id="display">0</div>
         
         <div class="buttons">
             <button class="action" onclick="clearDisplay()">AC</button>
             <button class="action" onclick="deleteLast()">DEL</button>
-            <button class="action" onclick="appendCharacter('%')">%</button>
+            <button class="sci" onclick="appendCharacter('(')">(</button>
+            <button class="sci" onclick="appendCharacter(')')">)</button>
+            <button class="sci" onclick="appendCharacter('%')">%</button>
+
+            <button class="sci" onclick="appendCharacter('sin(')">sin</button>
+            <button class="sci" onclick="appendCharacter('cos(')">cos</button>
+            <button class="sci" onclick="appendCharacter('tan(')">tan</button>
+            <button class="sci" onclick="appendCharacter('log(')">log</button>
+            <button class="sci" onclick="appendCharacter('ln(')">ln</button>
+
+            <button class="sci" onclick="appendCharacter('√(')">√</button>
+            <button class="sci" onclick="appendCharacter('^')">x^y</button>
+            <button class="sci" onclick="appendCharacter('π')">π</button>
+            <button class="sci" onclick="appendCharacter('e')">e</button>
             <button class="operator" onclick="appendCharacter('/')">÷</button>
 
             <button class="number" onclick="appendCharacter('7')">7</button>
             <button class="number" onclick="appendCharacter('8')">8</button>
             <button class="number" onclick="appendCharacter('9')">9</button>
+            <button class="sci" onclick="appendCharacter('ans')">Ans</button>
             <button class="operator" onclick="appendCharacter('*')">×</button>
 
             <button class="number" onclick="appendCharacter('4')">4</button>
             <button class="number" onclick="appendCharacter('5')">5</button>
             <button class="number" onclick="appendCharacter('6')">6</button>
             <button class="operator" onclick="appendCharacter('-')">−</button>
+            <button class="operator" onclick="appendCharacter('+')">+</button>
 
             <button class="number" onclick="appendCharacter('1')">1</button>
             <button class="number" onclick="appendCharacter('2')">2</button>
             <button class="number" onclick="appendCharacter('3')">3</button>
-            <button class="operator" onclick="appendCharacter('+')">+</button>
-
-            <button class="number zero" onclick="appendCharacter('0')">0</button>
+            <button class="number" onclick="appendCharacter('0')">0</button>
             <button class="number" onclick="appendCharacter('.')">.</button>
-            <button class="equal" onclick="calculateResult()">=</button>
+
+            <button class="equal" style="grid-column: span 5;" onclick="calculateResult()">=</button>
         </div>
     </div>
 
     <div id="vipModal" class="modal">
         <div class="modal-content">
             <h3>👑 Yêu Cầu Gói VIP</h3>
-            <p>Kết quả vượt quá giới hạn <strong>20</strong>!</p>
-            <p>Vui lòng nâng cấp VIP (49k) để xem kết quả này và tính toán không giới hạn.</p>
+            <p>Phép tính cấp cao! Kết quả vượt quá giới hạn <strong>20</strong>.</p>
+            <p>Vui lòng nâng cấp VIP (49k) để mở khóa full chức năng Casio.</p>
             
             <div class="payment-box">
                 <p>Chuyển khoản MoMo / ZaloPay:</p>
@@ -186,7 +223,7 @@
             </div>
 
             <button class="vip-btn" onclick="confirmPayment()">✅ Tôi đã chuyển khoản</button>
-            <button class="close-btn" onclick="closeModal()">Tôi không có tiền, để sau</button>
+            <button class="close-btn" onclick="closeModal()">Đợi đi xin mẹ tiền đã</button>
         </div>
     </div>
 
@@ -194,11 +231,18 @@
         const display = document.getElementById('display');
         let currentInput = '0';
         let isLocked = false; 
+        let lastAnswer = 0; // Lưu kết quả cũ cho nút Ans
 
         function updateDisplay() {
             if (isLocked) return; 
             display.classList.remove('locked');
-            let textToDisplay = currentInput.replace(/\*/g, '×').replace(/\//g, '÷').replace(/\-/g, '−');
+            // Thay thế ký hiệu để hiển thị đẹp mắt
+            let textToDisplay = currentInput
+                .replace(/\*/g, '×')
+                .replace(/\//g, '÷')
+                .replace(/\-/g, '−')
+                .replace(/Math.PI/g, 'π')
+                .replace(/Math.E/g, 'e');
             display.innerText = textToDisplay;
         }
 
@@ -208,7 +252,12 @@
                 currentInput = '0';
             }
 
-            if (currentInput === '0' && !['.', '%', '/', '*', '+', '-'].includes(char)) {
+            // Xử lý nút Ans
+            if (char === 'ans') {
+                char = lastAnswer.toString();
+            }
+
+            if (currentInput === '0' && !['.', '%', '/', '*', '+', '-', '^'].includes(char)) {
                 currentInput = char;
             } else {
                 currentInput += char;
@@ -224,39 +273,76 @@
 
         function deleteLast() {
             if (isLocked) return;
-            if (currentInput.length > 1) {
+            // Nếu xóa chữ sin(, cos( thì xóa cả cụm cho tiện
+            if (currentInput.endsWith('sin(') || currentInput.endsWith('cos(') || currentInput.endsWith('tan(') || currentInput.endsWith('log(')) {
+                currentInput = currentInput.slice(0, -4);
+            } else if (currentInput.endsWith('ln(')) {
+                currentInput = currentInput.slice(0, -3);
+            } else if (currentInput.endsWith('√(')) {
+                currentInput = currentInput.slice(0, -2);
+            } else if (currentInput.length > 1) {
                 currentInput = currentInput.slice(0, -1);
             } else {
                 currentInput = '0';
             }
+            if(currentInput === '') currentInput = '0';
             updateDisplay();
         }
 
         function calculateResult() {
             if (isLocked) return;
 
+            // Định nghĩa các hàm toán học để dùng trong eval/Function
+            const sin = (x) => Math.sin(x * Math.PI / 180); // Chuyển sang độ
+            const cos = (x) => Math.cos(x * Math.PI / 180);
+            const tan = (x) => Math.tan(x * Math.PI / 180);
+            const log = (x) => Math.log10(x);
+            const ln = (x) => Math.log(x);
+            const sqrt = (x) => Math.sqrt(x);
+            const π = Math.PI;
+            const e = Math.E;
+
             try {
-                let expression = currentInput.replace(/%/g, '/100');
-                let result = new Function('return ' + expression)();
+                // Chuyển đổi chuỗi nhập thành biểu thức JS
+                let expression = currentInput
+                    .replace(/×/g, '*')
+                    .replace(/÷/g, '/')
+                    .replace(/−/g, '-')
+                    .replace(/%/g, '/100')
+                    .replace(/\^/g, '**')
+                    .replace(/√/g, 'sqrt');
+
+                // Tự động đóng ngoặc nếu người dùng quên
+                let openBrackets = (expression.match(/\(/g) || []).length;
+                let closeBrackets = (expression.match(/\)/g) || []).length;
+                for (let i = 0; i < openBrackets - closeBrackets; i++) {
+                    expression += ')';
+                }
+
+                // Dùng new Function thay cho eval để an toàn hơn một chút và truyền hàm vào scope
+                let calcFunc = new Function('sin', 'cos', 'tan', 'log', 'ln', 'sqrt', 'π', 'e', 'return ' + expression);
+                let result = calcFunc(sin, cos, tan, log, ln, sqrt, π, e);
                 
+                // Xử lý số thập phân siêu dài do lỗi dấu phẩy động của JS
                 if (!Number.isInteger(result)) {
                     result = parseFloat(result.toFixed(10));
                 }
                 
-                // HIỆN POPUP NẾU KQ > 20
+                // HIỆN POPUP NẾU KQ > 20 (Luật VIP bất di bất dịch)
                 if (result > 20) {
                     document.getElementById('vipModal').style.display = 'flex';
                     isLocked = true;
                     display.classList.add('locked');
-                    display.innerText = "Yêu cầu VIP 🔒";
+                    display.innerText = "Lỗi: Chưa Nạp VIP 🔒";
                     currentInput = "0"; 
                 } else {
                     currentInput = result.toString();
+                    lastAnswer = result; // Lưu lại Ans
                     updateDisplay();
                 }
 
             } catch (error) {
-                currentInput = 'Lỗi cú pháp';
+                currentInput = 'Syntax Error';
                 updateDisplay();
                 setTimeout(clearDisplay, 1500);
             }
@@ -268,7 +354,7 @@
         }
 
         function confirmPayment() {
-            alert('Hệ thống đang kiểm tra giao dịch từ số 0797866420...\nVui lòng giữ máy trong vòng 24h để Admin xác nhận! 😂');
+            alert('Hệ thống đang quét GD từ ví MoMo 0797866420...\nDo bạn không chịu học bài nên lệnh nạp bị treo 24h! 😂');
             closeModal();
         }
     </script>
